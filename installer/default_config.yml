@@ -19,7 +19,7 @@ Config:
   #    Value: 'Tag2Value'
   services:
     aws_backup:
-      enabled: true  # Enable (True) or Disable (False) AWS Backup integration.  WARNING - SETTING THIS TO FALSE WILL DISABLE AUTOMATIC BACKUPS OF YOUR SOCA ENVIRONMENT.
+      enabled: false  # Enable (True) or Disable (False) AWS Backup integration.  WARNING - SETTING THIS TO FALSE WILL DISABLE AUTOMATIC BACKUPS OF YOUR SOCA ENVIRONMENT.
       kms_key_id: ~  # Specify your own CMK to encrypt AWS Backup
 
     # Rework this section once migration is fully completed
@@ -162,7 +162,7 @@ Config:
 
   # Configure your EC2 instance used as login host below
   login_node:
-    instance_type: ["m7i-flex.large", "m7i.large", "m6a.large", "m6i.large", "m5.large"]  # Type of EC2 machine to deploy for login_node
+    instance_type: ["t3.medium"]  # Type of EC2 machine to deploy for login_node
     min_count: 1  # Minimum Number of login node(s) to provision. This value can be changed post deployment
     desired_count: ~  # Default is to match minimum count
     max_count: 2  # Maximum Number of login node(s) to provision. This value can be changed post deployment
@@ -188,17 +188,17 @@ Config:
 
   # Configure your EC2 instance used as controller host below
   controller:
-    instance_type: ["m7i-flex.large", "m7i.large", "m6a.large", "m6i.large", "m5.large"]  # Type of EC2 machine to deploy for controller
-    volume_size: 300  # Size of the EBS root disk in GB
+    instance_type: ["t3.medium"]  # Type of EC2 machine to deploy for controller
+    volume_size: 64  # Size of the EBS root disk in GB
     volume_type: "gp3"  #  'gp2' may be needed for AWS Outposts installations
-    volume_throughput: 150  #  For Provisioned IOPS SSD (io1) volumes
-    volume_iops: 8200  #  For Provisioned IOPS SSD (io1) volumes
+    volume_throughput: 125  #  For Provisioned IOPS SSD (io1) volumes
+    volume_iops: 3000  #  For Provisioned IOPS SSD (io1) volumes
     volume_kms_key_id: "alias/aws/ebs"  # Specify your own CMK to encrypt EBS volume.
     subnet_type: "private"  # Select if you want to deploy your EC2 machine in public or private subnet
 
   # Configure your AWS OpenSearch
   analytics:
-    enabled: true
+    enabled: false
     engine: "opensearch"
     kms_key_id: ~  # KMS KeyID for analytics
     aoss:
@@ -230,24 +230,24 @@ Config:
     version: "2023.1.16388"
     high_scale: false  # Should DCV be configured to support HA and high scale?
     gateway:
-      instance_type: ["m7i-flex.large", "m7i.large", "m6a.large", "m6i.large", "m5.large"]  # EC2 instance to deploy
+      instance_type: ["t3.medium"]  # EC2 instance to deploy
       instance_count: 1  # Number of DCV gateway node(s) to provision. This value can be changed post deployment
       volume_size: 50  # Size of the EBS root disk in GB
       volume_type: "gp3"
     broker:
-      instance_type: ["m7i-flex.large", "m7i.large", "m6a.large", "m6i.large", "m5.large"]  # EC2 instance to deploy
+      instance_type: ["t3.medium"]  # EC2 instance to deploy
       instance_count: 1  # Number of DCV broker node(s) to provision. This value can be changed post deployment
       volume_size: 50  # Size of the EBS root disk in GB
       volume_type: "gp3"
     manager:
-      instance_type: ["m7i-flex.large", "m7i.large", "m6a.large", "m6i.large", "m5.large"]  # EC2 instance to deploy
+      instance_type: ["t3.medium"]  # EC2 instance to deploy
       instance_count: 1  # Number of DCV session_manager node(s) to provision. This value can be changed post deployment
       volume_size: 50  # Size of the EBS root disk in GB
       volume_type: "gp3"
 
   # Configure your Directory options below
   directoryservice:
-    create_route53_resolver: true  # Create (true) the Route53 resolver and rules for the domain in AD mode. This may need to be set to false for shared VPC environments where the downstream AWS account is not able to create the Route53 resolver/rules.
+    create_route53_resolver: false  # Create (true) the Route53 resolver and rules for the domain in AD mode. This may need to be set to false for shared VPC environments where the downstream AWS account is not able to create the Route53 resolver/rules.
     # Choose the Directory to use on SOCA:
     # 1 - aws_ds_managed_activedirectory (Recommended) - Create a new AWS Directory Service Managed Active Directory -  https://docs.aws.amazon.com/directoryservice/latest/admin-guide/directory_microsoft_ad.html
     # 2 - existing_active_directory (Experimental) - Connect to an existing Microsoft Active Directory
